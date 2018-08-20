@@ -1,0 +1,7 @@
+{
+    "name":"A2 Production",
+    "database":{
+        "url":"mongodb://localhost:27017/Tododb_Prod"
+    },
+    "jwtPrivateKey":""
+}
