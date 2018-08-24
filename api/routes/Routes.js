@@ -7,6 +7,9 @@ module.exports = function(app) {
    const adminauthr = require('../middleware/adminauthorization');
    const error = require('../middleware/error');
    const validateID = require('../middleware/validateObjectId');
+   const cors = require('../middleware/cors'); 
+
+   app.use(cors);
 
   app.get("/", function(req, res) {
     res.status(200).send("Welcome to our restful API Byorn s");
@@ -24,7 +27,7 @@ module.exports = function(app) {
 
   app.route('/users')
   .get(userController.list_all_users)
-  .post(authr,userController.create_a_user);
+  .post(userController.create_a_user);
 
   app.route('/me')
   .get(authr, userController.me);

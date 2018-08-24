@@ -79,14 +79,7 @@ describe('UserController Tests', () => {
           password='password1234';
         })
     
-        test('should return 401 if client is not logged in', async () => {
-          token = ''; 
-    
-          const res = await exec();
-    
-          expect(res.status).toBe(401);
-        });
-    
+          
         test('should return 400 if user name is less than 5 characters', async () => {
           name = '1234'; 
           
