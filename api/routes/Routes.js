@@ -2,7 +2,6 @@
 module.exports = function(app) {
    const taskController = require('../controllers/TaskController');
    const userController = require('../controllers/UserController');
-   const profileController = require('../controllers/ProfileController');
    const auth = require('../controllers/Auth');
    const authr = require('../middleware/authorization');
    const adminauthr = require('../middleware/adminauthorization');
@@ -25,12 +24,6 @@ module.exports = function(app) {
     .get(validateID,taskController.read_a_task)
     .put([authr,validateID],taskController.update_a_task)
     .delete([authr,adminauthr,validateID],taskController.delete_a_task);
-
-  app.route('/profile')
-     .post(authr,profileController.create_profile);
-
-  app.route('/profile/:email')
-     .get(profileController.load_profile);
 
   app.route('/users')
   .get(userController.list_all_users)
