@@ -29,11 +29,9 @@ module.exports = function(app) {
   .get(userController.list_all_users)
   .post(userController.create_a_user);
 
-  app.route('/me')
-  .get(authr, userController.me);
 
   app.route('/users/:id')
-  .get(validateID,userController.read_a_user)
+  .get([authr,validateID],userController.read_a_user)
   .put([authr,validateID],userController.update_a_user)
   .delete([authr,adminauthr,validateID],userController.delete_a_user);
 

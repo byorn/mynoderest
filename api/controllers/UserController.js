@@ -8,10 +8,6 @@ exports.list_all_users = async function(req, res) {
   res.send(user);
 };
 
-exports.me = async function(req,res){
-  const user = await User.findById(req.user._id).select('-password');
-  res.send(user);
-}
 
 
 exports.create_a_user = async function(req, res) {

@@ -32,11 +32,19 @@ describe('UserController Tests', () => {
 
 
     describe('GET /users/:id', () => {
+
+        let token = '';
+        beforeEach(() => {
+
+          token = Util.generateAuthToken(new User());
+        });
+
         test('should return a user if valid id is passed', async () => {
           const user1 = new User({ name: 'username1',email:'u@g.com',password:'abcd1234' });
           await user1.save();
         
-          const res = await request(server).get('/users/' + user1._id);
+          const res = await request(server)
+                            .get('/users/' + user1._id).set('x-auth-token', token);
     
           expect(res.status).toBe(200);
           expect(res.body).toHaveProperty('name', user1.name);   
@@ -44,14 +52,16 @@ describe('UserController Tests', () => {
         });
     
         test('should return 404 if invalid id is passed', async () => {
-          const res = await request(server).get('/users/1');
+          const res = await request(server)
+                            .get('/users/1').set('x-auth-token', token);
     
           expect(res.status).toBe(404);
         });
     
         test('should return 404 if no user with the given id exists', async () => {
           const id = mongoose.Types.ObjectId();
-          const res = await request(server).get('/users/' + id);
+          const res = await request(server)
+                            .get('/users/' + id).set('x-auth-token', token);
 
           expect(res.status).toBe(404);
         });
@@ -136,7 +146,7 @@ describe('UserController Tests', () => {
           return await request(server)
             .put('/users/' + id)
             .set('x-auth-token', token)
-            .send({ name: newName, email:newEmail,isAdmin:newAdmin });
+            .send({ name: newName, email:newEmail,isAdmin:newAdmin,password:'abcd1234'});
         }
     
         beforeEach(async () => {
@@ -179,7 +189,7 @@ describe('UserController Tests', () => {
           id = mongoose.Types.ObjectId();
     
           const res = await exec();
-    
+        
           expect(res.status).toBe(404);
         });
 
