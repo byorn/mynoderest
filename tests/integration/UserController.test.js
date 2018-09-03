@@ -150,8 +150,7 @@ describe('UserController Tests', () => {
         }
     
         beforeEach(async () => {
-          // Before each test we need to create a genre and 
-          // put it in the database.      
+           
           user = new User({ name: 'username01',email:'e@g.com',password:'password1234' });
           await user.save();
           
@@ -167,6 +166,17 @@ describe('UserController Tests', () => {
     
           expect(res.body).toHaveProperty('_id');
           expect(res.body).toHaveProperty('name', newName);
+        });
+
+        test('should return 400 if the updated email address exists for another user id', async () => {
+          
+          let userExisting = new User({ name: 'username02',email:'u@gmail.com',password:'password1234' });
+          userExisting.save();
+
+          const res = await exec();
+    
+          expect(res.status).toBe(400);
+          expect(res.body).toContain('already exists');
         });
 
         test('should return 400 if updated new user name is less than 5 characters', async () => {

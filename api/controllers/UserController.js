@@ -43,7 +43,14 @@ exports.update_a_user = async function(req, res) {
   const {error} = validateUpdate(req.body);
   if(error) return res.status(400).json(error.details[0].message);
   
-  let user = await User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
+  let userObjToUpdate = req.body;
+  userObjToUpdate.password = await Util.hashPassword(req.body.password);
+
+  let existingUser = await User.findOne({"email":userObjToUpdate.email, "_id": { $ne: req.params.id } });
+  if(existingUser) return res.status(400).json(`${userObjToUpdate.email} already exists in system`);
+
+
+  let user = await User.findOneAndUpdate({_id: req.params.id}, userObjToUpdate, {new: true});
 
   if (!user) return res.status(404).send('The user with the given ID was not found.');
 
