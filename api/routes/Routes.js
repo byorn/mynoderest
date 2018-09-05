@@ -8,6 +8,7 @@ module.exports = function(app) {
    const error = require('../middleware/error');
    const validateID = require('../middleware/validateObjectId');
    const cors = require('../middleware/cors'); 
+   const fileUploadController = require('../controllers/FileUploadController');
 
    app.use(cors);
 
@@ -36,5 +37,8 @@ module.exports = function(app) {
   .delete([authr,adminauthr,validateID],userController.delete_a_user);
 
   app.route('/login').post(auth.login);
+
+  app.route('/upload').post(fileUploadController.upload_file);
+
   app.use(error);
 };

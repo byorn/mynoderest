@@ -1,7 +1,7 @@
 const config = require('config');
 const morgan = require('morgan');
 const helmet = require('helmet');
-
+const fileUpload = require('express-fileupload');
 
 //set DEBUG=app:startup
 //set NODE_ENV=production
@@ -28,5 +28,10 @@ module.exports = function(app, express){
     debug(`Application name ${config.name}`);
   
     app.use(express.json());
+
+    app.use(fileUpload({
+            limits: { fileSize: 50 * 1024 * 1024 },
+            abortOnLimit: true
+        }));
    
 }
