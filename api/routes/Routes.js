@@ -36,6 +36,11 @@ module.exports = function(app) {
   .put([authr,validateID],userController.update_a_user)
   .delete([authr,adminauthr,validateID],userController.delete_a_user);
 
+  
+  app.route('/users_updatepic/:id')
+   .put([authr,validateID],userController.update_profile_pic);
+  
+
   app.route('/login').post(auth.login);
 
   app.route('/upload').post(fileUploadController.upload_file);

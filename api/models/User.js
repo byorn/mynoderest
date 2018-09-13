@@ -31,6 +31,9 @@ var UserSchema = new Schema({
   isAdmin: {
     type:Boolean,
     default:false
+  },
+  pic:{
+    type:String
   }
   
 });

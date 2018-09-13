@@ -2,7 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const Util = require('../../api/util/Util');
 const {User} = require('../../api/models/User');
-
+const {Image} = require('../../api/models/Image');
 
 let server;
 
@@ -134,7 +134,7 @@ describe('UserController Tests', () => {
 
       });
 
-      describe('PUT /:id', () => {
+      describe('PUT /users/:id', () => {
         let token; 
         let newName; 
         let newEmail;
@@ -210,11 +210,53 @@ describe('UserController Tests', () => {
     
           expect(res.status).toBe(404);
         });
+      });
 
+
+      describe('PUT users_updatepic/:id', () => {
+          let token; 
+          let newPic; 
+          let id;
+          let user;
+          let image;
+      
+          beforeEach(async () => {
+           
+            user = new User({ name: 'username01',email:'e@g.com',password:'password1234' });
+            await user.save();
+            
+            token = Util.generateAuthToken(new User());     
+            id = user._id; 
+            
+            image = new Image({name:'profile_pic'});
+            newPic = image._id;
+
+          })
+
+          afterEach(async () => { 
+            
+            await Image.remove({});
+          });
+
+          const exec = async () => {
+            return await request(server)
+              .put('/users_updatepic/' + id)
+              .set('x-auth-token', token)
+              .send({ pic: newPic});
+          }
+
+          test('should update profile pic', async () => {
+            const res = await exec();
+      
+            expect(res.body).toHaveProperty('_id');
+            expect(res.body).toHaveProperty('name', 'username01');
+            expect(res.body).toHaveProperty('pic', newPic.toString());
+          });
 
       });
-    
-      describe('DELETE /:id', () => {
+
+          
+      describe('DELETE users/:id', () => {
         let token; 
         let user; 
         let id; 

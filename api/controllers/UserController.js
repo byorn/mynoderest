@@ -57,6 +57,14 @@ exports.update_a_user = async function(req, res) {
   res.send(user);
 };
 
+exports.update_profile_pic = async function(req, res){
+  let userObjToUpdate = req.body;
+
+  let user = await User.findOneAndUpdate({_id: req.params.id}, userObjToUpdate, {new: true});
+
+  res.send(user);
+};
+
 
 exports.delete_a_user = async function(req, res) {
 
