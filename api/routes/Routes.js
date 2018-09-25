@@ -1,6 +1,7 @@
 'use strict';
 module.exports = function(app) {
    const taskController = require('../controllers/TaskController');
+   const categoryController = require('../controllers/CategoryController');
    const userController = require('../controllers/UserController');
    const auth = require('../controllers/Auth');
    const authr = require('../middleware/authorization');
@@ -25,6 +26,16 @@ module.exports = function(app) {
     .get(validateID,taskController.read_a_task)
     .put([authr,validateID],taskController.update_a_task)
     .delete([authr,adminauthr,validateID],taskController.delete_a_task);
+
+  app.route('/categories')
+    .get(categoryController.list_all_categorys)
+    .post(authr,categoryController.create_a_category);
+
+
+  app.route('/categories/:id')
+    .get(validateID,categoryController.read_a_category)
+    .put([authr,validateID],categoryController.update_a_category)
+    .delete([authr,adminauthr,validateID],categoryController.delete_a_category);
 
   app.route('/users')
   .get(userController.list_all_users)
