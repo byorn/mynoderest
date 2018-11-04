@@ -13,6 +13,12 @@ exports.create_a_category = async (req, res) => {
   const { error } = validate(req.body); 
   if (error) return res.status(400).json(error.details[0].message);
   
+
+  //if category  already exists
+  let cat = await Category.findOne({"name":req.body.name});
+  if(cat) return res.status(409).json("Category already exists");
+
+  //save
   let newCat = new Category(req.body);
   newCat = await newCat.save();
   res.send(newCat);
@@ -29,7 +35,11 @@ exports.read_a_category = async function(req, res) {
 exports.update_a_category = async function(req, res) {
   const { error } = validate(req.body); 
   if (error) return res.status(400).json(error.details[0].message);
+  
+  let catExists = await Category.findOne({"name":req.body.name});
+  if(catExists) return res.status(409).json("Category already exists");
 
+  //update
   let cat = await Category.findOneAndUpdate({_id: req.params.id}, req.body, {new: true});
 
   if (!cat) return res.status(404).send('The category with the given ID was not found.');

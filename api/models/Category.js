@@ -30,6 +30,8 @@ var CategorySchema = new Schema({
 function validateCategory(category){
   const schema = {
     name: Joi.string().min(1).max(50).required(),
+    description: Joi.string().min(1).max(500),
+    pic: Joi.string()
   }
   return Joi.validate(category, schema);
 }

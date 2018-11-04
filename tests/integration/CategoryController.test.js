@@ -59,18 +59,23 @@ describe('CategoryController Tests', () => {
 
         let token; 
         let name; 
+        let description;
+        let pic;
+
     
         const exec = async () => {
           return await request(server)
             .post('/categories')
             .set('x-auth-token', token)
-            .send({ name });
+            .send({ name, description,pic });
         }
     
         beforeEach(() => {
 
           token = Util.generateAuthToken(new User());
-          name = 'cat03'; 
+          name = 'cat03';
+          description = '<b>some long description</b>';
+          pic ='123123123122';
         })
     
         test('should return 401 if client is not logged in', async () => {
@@ -90,7 +95,18 @@ describe('CategoryController Tests', () => {
 
           expect(res.body).toHaveProperty('_id');
           expect(res.body).toHaveProperty('name', 'cat03');
+          expect(res.body).toHaveProperty('description', '<b>some long description</b>');
 
+        });
+
+        test('should return 409 if category already exists', async () => {
+          
+          const cat = new Category({ name: 'cat03', description: 'test description', pic: '' });
+          await cat.save();
+
+          const res = await exec();
+          expect(res.text).toMatch("Category already exists");
+          expect(res.status).toBe(409);
         });
             
       });
@@ -102,6 +118,7 @@ describe('CategoryController Tests', () => {
         let id; 
     
         const exec = async () => {
+          
           return await request(server)
             .put('/categories/' + id)
             .set('x-auth-token', token)
@@ -117,6 +134,17 @@ describe('CategoryController Tests', () => {
           id = cat._id; 
           newName = 'updatedName'; 
         })
+
+
+        test('should return 409 if update category to an existing category', async () => {
+     
+          newName='cat04';
+          const res = await exec();
+
+          expect(res.text).toMatch("Category already exists");
+          expect(res.status).toBe(409);
+    
+        });
     
         test('should return the updated category', async () => {
           const res = await exec();
