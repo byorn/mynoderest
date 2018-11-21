@@ -36,7 +36,8 @@ exports.update_a_category = async function(req, res) {
   const { error } = validate(req.body); 
   if (error) return res.status(400).json(error.details[0].message);
   
-  let catExists = await Category.findOne({"name":req.body.name});
+  
+  let catExists = await Category.findOne({"name":req.body.name, "_id": { $ne: req.params.id } });
   if(catExists) return res.status(409).json("Category already exists");
 
   //update

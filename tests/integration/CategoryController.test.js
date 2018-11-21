@@ -138,12 +138,24 @@ describe('CategoryController Tests', () => {
 
         test('should return 409 if update category to an existing category', async () => {
      
-          newName='cat04';
+          const catEx = new Category({ name: 'catEx' });
+          await catEx.save();
+
+          newName='catEx';
           const res = await exec();
 
           expect(res.text).toMatch("Category already exists");
           expect(res.status).toBe(409);
     
+        });
+
+        test('should update successfully when updating name to the same name', async () => {
+          
+          newName='cat04';
+          const res = await exec();
+
+          expect(res.body).toHaveProperty('_id');
+          expect(res.body).toHaveProperty('name', newName);
         });
     
         test('should return the updated category', async () => {
