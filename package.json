@@ -4,7 +4,7 @@
   "description": "My Node JS Rest Service",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --verbose=false --runInBand",
+    "test": "jest --watchAll --verbose=true --runInBand",
     "start": "nodemon server.js"
   },
   "author": "Byorn",
